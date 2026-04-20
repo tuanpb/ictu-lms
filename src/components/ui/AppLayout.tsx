@@ -100,7 +100,6 @@ const AppLayout = () => {
                 fontSize: 15,
                 transition: 'all 0.2s',
                 position: 'relative',
-                padding: '8px 0',
               }}
             >
               <Home size={16} />
@@ -129,7 +128,6 @@ const AppLayout = () => {
                 fontSize: 15,
                 transition: 'all 0.2s',
                 position: 'relative',
-                padding: '8px 0',
               }}
             >
               <Wallet size={16} />
@@ -185,20 +183,18 @@ const AppLayout = () => {
                   background: 'var(--gradient-primary)',
                 }}
               />
-              {screens.md && (
-                <Text
-                  style={{
-                    color: 'var(--text-secondary)',
-                    fontSize: 14,
-                    maxWidth: 120,
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  {currentUser?.fullName ?? currentUser?.email ?? 'Người dùng'}
-                </Text>
-              )}
+              <Text
+                style={{
+                  color: 'var(--text-secondary)',
+                  fontSize: 14,
+                  maxWidth: 120,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {currentUser?.fullName ?? currentUser?.email ?? 'Người dùng'}
+              </Text>
             </Space>
           </Dropdown>
         </Space>
