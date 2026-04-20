@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Card, Typography, Flex, Row, Col, Button, Space, Badge, Divider, Tag, message } from 'antd';
 import { Wallet, CreditCard, QrCode, Info, RefreshCcw, Copy, ArrowDownRight } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
@@ -113,7 +113,7 @@ const WalletPage = () => {
                   borderRadius: '50%',
                 }}
               />
-              
+
               <Flex vertical gap={24} style={{ position: 'relative', zIndex: 1 }}>
                 <Flex justify="space-between" align="flex-start">
                   <div>
@@ -127,10 +127,10 @@ const WalletPage = () => {
                       <span style={{ color: 'white', opacity: 0.9, fontSize: 20, fontWeight: 600 }}>Coin</span>
                     </div>
                     <div style={{ marginTop: 8 }}>
-                      <Tag color="red" style={{ 
-                        borderRadius: 12, 
-                        border: 'none', 
-                        background: 'rgba(239, 68, 68, 0.2)', 
+                      <Tag color="red" style={{
+                        borderRadius: 12,
+                        border: 'none',
+                        background: 'rgba(239, 68, 68, 0.2)',
                         padding: '4px 10px',
                         display: 'inline-flex',
                         alignItems: 'center',
@@ -149,8 +149,8 @@ const WalletPage = () => {
                     icon={<RefreshCcw size={18} className={refreshing ? 'animate-spin' : ''} />}
                     onClick={handleRefresh}
                     loading={refreshing}
-                    style={{ 
-                      color: 'white', 
+                    style={{
+                      color: 'white',
                       background: 'rgba(255,255,255,0.15)',
                       backdropFilter: 'blur(10px)',
                       borderRadius: 12,
@@ -162,9 +162,9 @@ const WalletPage = () => {
                   </Button>
                 </Flex>
 
-                <div style={{ 
-                  background: 'rgba(255,255,255,0.1)', 
-                  padding: '16px 20px', 
+                <div style={{
+                  background: 'rgba(255,255,255,0.1)',
+                  padding: '16px 20px',
                   borderRadius: 16,
                   border: '1px solid rgba(255,255,255,0.1)',
                   backdropFilter: 'blur(5px)'

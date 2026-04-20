@@ -60,11 +60,13 @@ export const useExamStore = create<ExamState>()(
           const ids: string[] = [];
           const urls: Record<string, string> = {};
 
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           data.forEach((item: any) => {
             if (item.subject_id) {
               ids.push(item.subject_id);
-              if (item.subjects?.data_url) {
-                urls[item.subject_id] = item.subjects.data_url;
+              const subjectData = Array.isArray(item.subjects) ? item.subjects[0] : item.subjects;
+              if (subjectData?.data_url) {
+                urls[item.subject_id] = subjectData.data_url;
               }
             }
           });
@@ -122,7 +124,7 @@ export const useExamStore = create<ExamState>()(
 
           if (data && data.questions) {
             const subject = get().subjects.find(s => s.id === subjectId);
-            const answers: Answer[] = data.questions.map((q: any, index: number) => ({
+            const answers: Answer[] = data.questions.map((q: { qHtml?: string; optHtmlA?: string; optHtmlB?: string; optHtmlC?: string; optHtmlD?: string; correctIndex?: number }, index: number) => ({
               questionNumber: index + 1,
               // questionText: q.question,
               questionText: q.qHtml,
@@ -174,7 +176,7 @@ export const useExamStore = create<ExamState>()(
           if (error) throw error;
 
           if (data) {
-            const mappedSubjects: Subject[] = data.map((item: any) => ({
+            const mappedSubjects: Subject[] = data.map((item: { id: string; name: string; description?: string; unlock_coin: string | number }) => ({
               id: item.id,
               name: item.name,
               description: item.description,

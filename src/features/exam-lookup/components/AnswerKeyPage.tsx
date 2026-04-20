@@ -61,7 +61,7 @@ const AnswerKeyPage = () => {
       } else {
         message.error(result.error);
       }
-    } catch (error) {
+    } catch {
       message.error('Lỗi hệ thống');
     } finally {
       setIsUnlocking(false);

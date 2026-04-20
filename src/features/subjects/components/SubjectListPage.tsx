@@ -92,7 +92,7 @@ const SubjectListPage = () => {
       } else {
         message.error(result.error || 'Có lỗi xảy ra khi mở khóa');
       }
-    } catch (error) {
+    } catch {
       message.error('Lỗi kết nối hệ thống');
     } finally {
       setIsUnlocking(false);
