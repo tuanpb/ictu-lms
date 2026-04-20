@@ -1,0 +1,182 @@
+/**
+ * Global Styles
+ * Sử dụng theme mặc định của Ant Design.
+ * Minimalist, gọn gàng, màu sắc nhã nhặn.
+ */
+
+:root {
+  /* Colors */
+  --color-primary: #1677ff;
+  --color-primary-light: #69b1ff;
+  --color-primary-dark: #0958d9;
+
+  --color-success: #52c41a;
+  --color-warning: #faad14;
+  --color-danger: #ff4d4f;
+
+  /* Backgrounds */
+  --bg-base: #f5f5f5;
+  --bg-surface: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-card: #ffffff;
+  --bg-glass: #ffffff;
+  --bg-glass-hover: #fafafa;
+
+  /* Text - aligned with Ant Design default text colors */
+  --text-primary: rgba(0, 0, 0, 0.88);
+  --text-secondary: rgba(0, 0, 0, 0.65);
+  --text-muted: rgba(0, 0, 0, 0.45);
+
+  /* Borders */
+  --border-subtle: #f0f0f0;
+  --border-default: #d9d9d9;
+  --border-active: #1677ff;
+
+  /* Typography */
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* ===== Reset & Base ===== */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-family);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.5715;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-primary-light);
+}
+
+/* ===== HTML Content Styles (Questions & Answers) ===== */
+.q-html-content {
+  line-height: 1.6;
+  font-family: inherit;
+  color: inherit;
+}
+
+.q-html-content p {
+  margin-bottom: 0.5rem;
+}
+
+.q-html-content p:last-child {
+  margin-bottom: 0;
+}
+
+.q-html-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 0.5rem 0;
+  display: block;
+}
+
+.q-html-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  background: var(--bg-surface);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+.q-html-content th,
+.q-html-content td {
+  padding: 12px;
+  border: 1px solid var(--border-subtle);
+  text-align: left;
+}
+
+.q-html-content th {
+  background: var(--bg-base);
+  font-weight: 600;
+}
+
+.q-html-content ul,
+.q-html-content ol {
+  padding-left: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.q-html-content li {
+  margin-bottom: 0.25rem;
+}
+
+.q-html-content code {
+  background: var(--bg-base);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
+/* ===== Print Styles (Export PDF) ===== */
+@media print {
+  /* Hide UI elements not meant for printing */
+  .no-print,
+  .ant-layout-header,
+  .ant-layout-sider,
+  .ant-layout-footer {
+    display: none !important;
+  }
+
+  body {
+    background: transparent !important;
+    color: #000 !important;
+  }
+
+  /* Expand layout to use full width */
+  .ant-layout {
+    background: transparent !important;
+  }
+  
+  .ant-layout-content {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Remove borders/shadows from cards for clean printing */
+  .ant-card {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+
+  /* Avoid breaking questions mid-page */
+  .question-container {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 20px !important;
+  }
+  
+  /* Show grid nicely too */
+  .ant-row {
+    break-inside: auto;
+  }
+}
