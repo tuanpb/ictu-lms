@@ -6,9 +6,13 @@
 
 :root {
   /* Colors */
-  --color-primary: #1677ff;
-  --color-primary-light: #69b1ff;
-  --color-primary-dark: #0958d9;
+  --color-primary: #6366f1;
+  --color-primary-light: #818cf8;
+  --color-primary-dark: #4f46e5;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #6366f1, #a855f7);
+  --gradient-success: linear-gradient(135deg, #10b981, #3b82f6);
 
   --color-success: #52c41a;
   --color-warning: #faad14;
@@ -30,10 +34,10 @@
   /* Borders */
   --border-subtle: #f0f0f0;
   --border-default: #d9d9d9;
-  --border-active: #1677ff;
+  --border-active: var(--color-primary);
 
   /* Typography */
-  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-family: Outfit, Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 /* ===== Reset & Base ===== */

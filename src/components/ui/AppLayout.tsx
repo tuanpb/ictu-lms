@@ -86,7 +86,7 @@ const AppLayout = () => {
               width: 36,
               height: 36,
               borderRadius: 10,
-              background: 'linear-gradient(135deg, #6366f1, #a855f7)',
+              background: 'var(--gradient-primary)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -171,7 +171,7 @@ const AppLayout = () => {
                 size={32}
                 icon={<User size={16} />}
                 style={{
-                  background: 'linear-gradient(135deg, #6366f1, #06b6d4)',
+                  background: 'var(--gradient-primary)',
                 }}
               />
               {screens.md && (

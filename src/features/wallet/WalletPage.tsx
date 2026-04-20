@@ -56,7 +56,7 @@ const WalletPage = () => {
             width: 64,
             height: 64,
             borderRadius: 20,
-            background: 'linear-gradient(135deg, #10b981, #3b82f6)',
+            background: 'var(--gradient-success)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -79,7 +79,7 @@ const WalletPage = () => {
             <Card
               bordered={false}
               style={{
-                background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                background: 'var(--gradient-primary)',
                 borderRadius: 24,
                 overflow: 'hidden',
                 position: 'relative',
@@ -202,7 +202,7 @@ const WalletPage = () => {
                 <Flex justify="space-between" align="center">
                   <Text type="secondary">Số tài khoản</Text>
                   <Flex align="center" gap={8}>
-                    <Text strong style={{ fontSize: 16, color: '#1677ff' }}>01967092701</Text>
+                    <Text strong style={{ fontSize: 16, color: 'var(--color-primary)' }}>01967092701</Text>
                     <Button type="text" size="small" icon={<Copy size={12} />} onClick={() => copyToClipboard('01967092701', 'số tài khoản')} />
                   </Flex>
                 </Flex>

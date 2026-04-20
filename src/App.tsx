@@ -48,8 +48,9 @@ const App = () => {
       locale={viVN}
       theme={{
         token: {
-          colorPrimary: '#1677ff',
-          borderRadius: 6,
+          fontFamily: "Outfit, Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+          colorPrimary: '#6366f1',
+          borderRadius: 8,
         },
       }}
     >

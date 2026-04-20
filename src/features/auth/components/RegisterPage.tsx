@@ -135,7 +135,7 @@ const RegisterPage = () => {
               width: 56,
               height: 56,
               borderRadius: 16,
-              background: 'linear-gradient(135deg, #4096ff, #1677ff)',
+              background: 'var(--gradient-primary)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',

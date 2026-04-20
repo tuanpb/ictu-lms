@@ -14,7 +14,6 @@ import {
 } from 'antd';
 import {
   Search,
-  Sparkles,
   Lock,
   Unlock,
   CheckCircle,

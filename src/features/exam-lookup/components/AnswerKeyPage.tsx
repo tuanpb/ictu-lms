@@ -168,7 +168,7 @@ const AnswerKeyPage = () => {
                 size="large" 
                 icon={<Unlock size={18} />}
                 onClick={() => setIsModalVisible(true)}
-                style={{ borderRadius: 12, height: 48, padding: '0 32px', background: 'linear-gradient(135deg, #6366f1, #a855f7)', border: 'none' }}
+                style={{ borderRadius: 12, height: 48, padding: '0 32px', background: 'var(--gradient-primary)', border: 'none' }}
               >
                 Mở khóa ngay
               </Button>
