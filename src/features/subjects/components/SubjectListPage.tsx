@@ -41,7 +41,7 @@ const SubjectListPage = () => {
 
   const filteredSubjects = useMemo(() => {
     let result = [...subjects];
-    
+
     // Tìm kiếm
     if (searchValue) {
       const query = searchValue.toLowerCase();
@@ -56,10 +56,10 @@ const SubjectListPage = () => {
     return result.sort((a, b) => {
       const aUnlocked = unlockedSubjectIds.includes(a.id);
       const bUnlocked = unlockedSubjectIds.includes(b.id);
-      
+
       if (aUnlocked && !bUnlocked) return -1;
       if (!aUnlocked && bUnlocked) return 1;
-      
+
       return a.name.localeCompare(b.name);
     });
   }, [subjects, searchValue, unlockedSubjectIds]);
@@ -101,38 +101,6 @@ const SubjectListPage = () => {
 
   return (
     <div style={{ animation: 'fadeIn 0.4s ease-out' }}>
-      <Flex vertical align="center" style={{ padding: '48px 0 32px', textAlign: 'center' }}>
-        <div
-          style={{
-            width: 64,
-            height: 64,
-            borderRadius: 24,
-            background: 'linear-gradient(135deg, #6366f1, #a855f7)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            marginBottom: 16,
-            boxShadow: '0 8px 32px rgba(99,102,241,0.3)',
-            animation: 'float 6s ease-in-out infinite',
-          }}
-        >
-          <Sparkles size={32} />
-        </div>
-
-        <Title
-          level={1}
-          style={{
-            margin: '0 0 8px',
-            color: 'var(--text-primary)',
-            fontSize: 40,
-            letterSpacing: -1,
-          }}
-        >
-          Tra cứu Đáp án
-        </Title>
-      </Flex>
-
       <div
         style={{
           position: 'sticky',
@@ -168,7 +136,7 @@ const SubjectListPage = () => {
           {filteredSubjects.map((subject, index) => {
             const cardColor = '#6366f1';
             const isUnlocked = unlockedSubjectIds.includes(subject.id);
-            
+
             return (
               <Col xs={24} sm={12} md={8} lg={6} key={subject.id}>
                 <Card
@@ -262,10 +230,10 @@ const SubjectListPage = () => {
       >
         <Flex vertical gap={12} style={{ padding: '16px 0' }}>
           <Text>Bạn có chắc chắn muốn mở khóa môn học <b>{selectedSubject?.name}</b>?</Text>
-          <div style={{ 
-            padding: 16, 
-            background: '#fef3c7', 
-            borderRadius: 12, 
+          <div style={{
+            padding: 16,
+            background: '#fef3c7',
+            borderRadius: 12,
             border: '1px solid #fcd34d',
             color: '#92400e'
           }}>

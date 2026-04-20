@@ -24,13 +24,13 @@ const AppLayout = () => {
     // Trang chủ chỉ hiện ở dropdown khi là mobile
     ...(!screens.md
       ? [
-          {
-            key: 'home',
-            icon: <Home size={14} />,
-            label: 'Trang chủ',
-            onClick: () => navigate('/'),
-          },
-        ]
+        {
+          key: 'home',
+          icon: <Home size={14} />,
+          label: 'Trang chủ',
+          onClick: () => navigate('/'),
+        },
+      ]
       : []),
     // Ví điểm hiện ở cả mobile và desktop dropdown
     {
@@ -103,7 +103,7 @@ const AppLayout = () => {
               letterSpacing: -0.5,
             }}
           >
-            DHTN-LMS
+            ICTU-LMS
           </Text>
         </div>
 
@@ -221,7 +221,7 @@ const AppLayout = () => {
           marginTop: 'auto',
         }}
       >
-        © 2026 DHTN-LMS • Hệ thống Tra cứu Đáp án Trắc nghiệm
+        © 2026 ICTU-LMS • Đề cương trực tuyến
       </Footer>
 
       <FloatButton.BackTop duration={400} style={{ right: 24, bottom: 80 }} />

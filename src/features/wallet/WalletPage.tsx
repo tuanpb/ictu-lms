@@ -42,7 +42,7 @@ const WalletPage = () => {
     const accountNo = '01967092701';
     const template = 'qr_only';
     const accountName = 'Phan Binh Tuan';
-    const addInfo = currentUser?.email || 'DHTN-LMS';
+    const addInfo = currentUser?.email || 'ICTU-LMS';
 
     return `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?amount=${amount}&addInfo=${encodeURIComponent(addInfo)}&accountName=${encodeURIComponent(accountName)}`;
   }, [amount, currentUser?.email]);
@@ -68,7 +68,7 @@ const WalletPage = () => {
           <Wallet size={32} />
         </div>
         <Title level={2} style={{ margin: 0, letterSpacing: -0.5 }}>Ví điểm của tôi</Title>
-        <Text type="secondary">Quản lý và nạp thêm Point để tra cứu đáp án</Text>
+        <Text type="secondary">Quản lý và nạp thêm coint để tải đề cương</Text>
       </Flex>
 
       <Row gutter={[24, 24]}>

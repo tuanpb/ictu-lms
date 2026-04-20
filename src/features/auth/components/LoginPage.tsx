@@ -105,10 +105,10 @@ const LoginPage = () => {
             <BookOpen size={28} />
           </div>
           <Title level={3} style={{ margin: 0, color: 'var(--text-primary)' }}>
-            DHTN-LMS
+            ICTU-LMS
           </Title>
           <Text type="secondary" style={{ fontSize: 14 }}>
-            Hệ thống Tra cứu Đáp án Trắc nghiệm
+            Đề cương trực tuyến
           </Text>
         </Flex>
 
