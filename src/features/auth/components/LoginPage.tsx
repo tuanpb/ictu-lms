@@ -113,7 +113,7 @@ const LoginPage = () => {
         </Flex>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+          <Space orientation="vertical" size={24} style={{ width: '100%' }}>
             <div>
               <Text
                 strong

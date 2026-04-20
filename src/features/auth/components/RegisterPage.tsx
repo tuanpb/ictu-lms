@@ -155,7 +155,7 @@ const RegisterPage = () => {
         </Flex>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+          <Space orientation="vertical" size="middle" style={{ width: '100%' }}>
             {renderField('email', 'Email', <Mail size={16} style={{ color: 'var(--text-muted)' }} />, 'Nhập email của bạn')}
             {renderField('password', 'Mật khẩu', <Lock size={16} style={{ color: 'var(--text-muted)' }} />, 'Tối thiểu 6 ký tự', true)}
 

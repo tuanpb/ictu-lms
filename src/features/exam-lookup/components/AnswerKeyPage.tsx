@@ -1,7 +1,7 @@
 import { useMemo, useState, useDeferredValue, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button, Tag, Empty, Typography, Flex, Row, Col, Card, Breadcrumb, Input, Modal, message, Checkbox } from 'antd';
-import { Home, FileText, Search, Lock, Unlock, Download } from 'lucide-react';
+import { Button, Tag, Empty, Typography, Flex, Row, Col, Card, Input, Modal, message, Checkbox } from 'antd';
+import { Search, Lock, Unlock, Download } from 'lucide-react';
 import { useExamStore } from '../../../store/examStore';
 import { useAuthStore } from '../../../store/authStore';
 import type { Answer } from '../../../lib/types';
@@ -21,7 +21,7 @@ const AnswerKeyPage = () => {
   const fetchQuestionsFromUrl = useExamStore((state) => state.fetchQuestionsFromUrl);
   const unlockedSubjectIds = useExamStore((state) => state.unlockedSubjectIds);
   const unlockSubject = useExamStore((state) => state.unlockSubject);
-  
+
   const currentUser = useAuthStore((state) => state.currentUser);
   const refreshBalance = useAuthStore((state) => state.refreshBalance);
 
@@ -114,10 +114,10 @@ const AnswerKeyPage = () => {
   if (!isUnlocked && subject) {
     return (
       <div style={{ maxWidth: 800, margin: '40px auto', padding: '0 20px' }}>
-        <Card 
-          style={{ 
-            textAlign: 'center', 
-            padding: '40px 20px', 
+        <Card
+          style={{
+            textAlign: 'center',
+            padding: '40px 20px',
             borderRadius: 24,
             background: 'rgba(255, 255, 255, 0.8)',
             backdropFilter: 'blur(10px)',
@@ -125,19 +125,19 @@ const AnswerKeyPage = () => {
           }}
         >
           <Flex vertical align="center" gap={20}>
-            <div style={{ 
-              width: 80, 
-              height: 80, 
-              borderRadius: 30, 
-              background: '#fff7ed', 
-              display: 'flex', 
-              alignItems: 'center', 
+            <div style={{
+              width: 80,
+              height: 80,
+              borderRadius: 30,
+              background: '#fff7ed',
+              display: 'flex',
+              alignItems: 'center',
               justifyContent: 'center',
               color: '#f97316'
             }}>
               <Lock size={40} />
             </div>
-            
+
             <div>
               <Title level={2} style={{ marginBottom: 8 }}>Môn học đang bị khóa</Title>
               <Text type="secondary" style={{ fontSize: 16 }}>
@@ -145,10 +145,10 @@ const AnswerKeyPage = () => {
               </Text>
             </div>
 
-            <div style={{ 
-              padding: '12px 24px', 
-              background: '#f8fafc', 
-              borderRadius: 16, 
+            <div style={{
+              padding: '12px 24px',
+              background: '#f8fafc',
+              borderRadius: 16,
               border: '1px solid #e2e8f0',
               display: 'flex',
               alignItems: 'center',
@@ -163,9 +163,9 @@ const AnswerKeyPage = () => {
               <Button size="large" onClick={() => navigate('/')} style={{ borderRadius: 12 }}>
                 Quay lại
               </Button>
-              <Button 
-                type="primary" 
-                size="large" 
+              <Button
+                type="primary"
+                size="large"
                 icon={<Unlock size={18} />}
                 onClick={() => setIsModalVisible(true)}
                 style={{ borderRadius: 12, height: 48, padding: '0 32px', background: 'var(--gradient-primary)', border: 'none' }}
@@ -301,15 +301,15 @@ const AnswerKeyPage = () => {
         <Text strong style={{ fontSize: 15, color: 'var(--text-primary)', flexShrink: 0, marginTop: 1 }}>
           Câu {answer.questionNumber}:
         </Text>
-        <div 
+        <div
           className="q-html-content"
-          style={{ 
-            fontSize: 15, 
-            color: 'var(--text-primary)', 
+          style={{
+            fontSize: 15,
+            color: 'var(--text-primary)',
             fontWeight: 600,
             lineHeight: 1.5
           }}
-          dangerouslySetInnerHTML={{ __html: answer.questionText || '' }} 
+          dangerouslySetInnerHTML={{ __html: answer.questionText || '' }}
         />
       </Flex>
 
@@ -350,34 +350,6 @@ const AnswerKeyPage = () => {
 
   return (
     <div style={{ animation: 'fadeIn 0.3s ease-out' }}>
-      <div className="no-print" style={{ marginBottom: 32 }}>
-        <Breadcrumb
-          items={[
-            {
-              title: (
-                <div
-                  onClick={() => navigate('/')}
-                  style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, color: 'var(--text-muted)' }}
-                >
-                  <Home size={14} /> <span>Trang chủ</span>
-                </div>
-              ),
-            },
-            {
-              title: <span style={{ color: 'var(--text-primary)' }}>{subject.name}</span>,
-            },
-            {
-              title: (
-                <span style={{ color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: 4 }}>
-                  <FileText size={14} /> Chi tiết bài kiểm tra
-                </span>
-              ),
-            },
-          ]}
-          style={{ marginBottom: 16, fontSize: 13 }}
-        />
-      </div>
-
       <div
         className="no-print"
         style={{
@@ -404,15 +376,15 @@ const AnswerKeyPage = () => {
           </div>
 
           <Flex align="center" gap={16} wrap="wrap" style={{ flex: 1, justifyContent: 'flex-end' }}>
-            <Button 
-              icon={<Download size={16} />} 
+            <Button
+              icon={<Download size={16} />}
               onClick={handleExportPDF}
               style={{ fontWeight: 500 }}
             >
               Xuất PDF
             </Button>
-            <Checkbox 
-              checked={showOnlyCorrect} 
+            <Checkbox
+              checked={showOnlyCorrect}
               onChange={(e) => setShowOnlyCorrect(e.target.checked)}
               style={{ fontWeight: 500 }}
             >

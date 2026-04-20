@@ -1,5 +1,5 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Layout, Avatar, Dropdown, Space, Typography, FloatButton, Button, Grid, Tag } from 'antd';
+import { Layout, Avatar, Dropdown, Space, Typography, FloatButton, Grid, Tag } from 'antd';
 import type { MenuProps } from 'antd';
 import { useAuthStore } from '../../store/authStore';
 import { BookOpen, Home, LogOut, User, Wallet, Coins } from 'lucide-react';
@@ -21,27 +21,6 @@ const AppLayout = () => {
   };
 
   const userMenuItems: MenuProps['items'] = [
-    // Trang chủ chỉ hiện ở dropdown khi là mobile
-    ...(!screens.md
-      ? [
-        {
-          key: 'home',
-          icon: <Home size={14} />,
-          label: 'Trang chủ',
-          onClick: () => navigate('/'),
-        },
-      ]
-      : []),
-    // Ví điểm hiện ở cả mobile và desktop dropdown
-    {
-      key: 'wallet',
-      icon: <Wallet size={14} />,
-      label: 'Ví điểm',
-      onClick: () => navigate('/wallet'),
-    },
-    {
-      type: 'divider',
-    },
     {
       key: 'logout',
       icon: <LogOut size={14} />,
@@ -108,33 +87,65 @@ const AppLayout = () => {
         </div>
 
         {screens.md && (
-          <Space size={12} style={{ flex: 1, justifyContent: 'center' }}>
-            <Button
-              type={location.pathname === '/' ? 'primary' : 'text'}
-              icon={<Home size={16} />}
+          <Space size={32} style={{ flex: 1, justifyContent: 'center' }}>
+            <div
               onClick={() => navigate('/')}
               style={{
-                height: 40,
-                borderRadius: 999,
-                paddingInline: 18,
-                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                color: location.pathname === '/' ? 'var(--color-primary)' : 'var(--text-secondary)',
+                fontWeight: location.pathname === '/' ? 700 : 500,
+                fontSize: 15,
+                transition: 'all 0.2s',
+                position: 'relative',
+                padding: '8px 0',
               }}
             >
+              <Home size={16} />
               Trang chủ
-            </Button>
-            <Button
-              type={location.pathname === '/wallet' ? 'primary' : 'text'}
-              icon={<Wallet size={16} />}
+              {location.pathname === '/' && (
+                <div style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  height: 2,
+                  background: 'var(--color-primary)',
+                  borderRadius: 2
+                }} />
+              )}
+            </div>
+            <div
               onClick={() => navigate('/wallet')}
               style={{
-                height: 40,
-                borderRadius: 999,
-                paddingInline: 18,
-                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                color: location.pathname === '/wallet' ? 'var(--color-primary)' : 'var(--text-secondary)',
+                fontWeight: location.pathname === '/wallet' ? 700 : 500,
+                fontSize: 15,
+                transition: 'all 0.2s',
+                position: 'relative',
+                padding: '8px 0',
               }}
             >
+              <Wallet size={16} />
               Ví điểm
-            </Button>
+              {location.pathname === '/wallet' && (
+                <div style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  height: 2,
+                  background: 'var(--color-primary)',
+                  borderRadius: 2
+                }} />
+              )}
+            </div>
           </Space>
         )}
 
@@ -198,31 +209,97 @@ const AppLayout = () => {
           maxWidth: 1280,
           width: '100%',
           margin: '0 auto',
-          padding: '32px 24px',
+          padding: '24px 24px',
           flex: 1,
         }}
       >
         <Outlet />
       </Content>
 
-      <Footer
-        style={{
-          position: 'sticky',
+      {screens.md && (
+        <Footer
+          style={{
+            position: 'sticky',
+            bottom: 0,
+            zIndex: 100,
+            textAlign: 'center',
+            background: 'rgba(255, 255, 255, 0.9)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            borderTop: '1px solid var(--border-subtle)',
+            color: 'var(--text-muted)',
+            fontSize: 12,
+            padding: '16px 24px',
+            marginTop: 'auto',
+          }}
+        >
+          © 2026 ICTU-LMS • Đề cương trực tuyến
+        </Footer>
+      )}
+
+      {!screens.md && (
+        <div style={{
+          position: 'fixed',
           bottom: 0,
-          zIndex: 100,
-          textAlign: 'center',
+          left: 0,
+          right: 0,
           background: 'rgba(255, 255, 255, 0.9)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
           borderTop: '1px solid var(--border-subtle)',
-          color: 'var(--text-muted)',
-          fontSize: 12,
-          padding: '16px 24px',
-          marginTop: 'auto',
-        }}
-      >
-        © 2026 ICTU-LMS • Đề cương trực tuyến
-      </Footer>
+          display: 'flex',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          padding: '12px 0 calc(12px + env(safe-area-inset-bottom, 0px))',
+          zIndex: 100,
+        }}>
+          <div
+            onClick={() => navigate('/')}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              color: location.pathname === '/' ? 'var(--color-primary)' : 'var(--text-muted)',
+              flex: 1,
+              cursor: 'pointer',
+              padding: '10px 16px',
+              borderRadius: 24,
+              background: location.pathname === '/' ? 'rgba(99, 102, 241, 0.1)' : 'transparent',
+              transition: 'all 0.2s',
+              margin: '0 8px',
+            }}
+          >
+            <Home size={18} />
+            <Text style={{ fontSize: 13, fontWeight: location.pathname === '/' ? 600 : 500, color: 'inherit' }}>
+              Trang chủ
+            </Text>
+          </div>
+
+          <div
+            onClick={() => navigate('/wallet')}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              color: location.pathname === '/wallet' ? 'var(--color-primary)' : 'var(--text-muted)',
+              flex: 1,
+              cursor: 'pointer',
+              padding: '10px 16px',
+              borderRadius: 24,
+              background: location.pathname === '/wallet' ? 'rgba(99, 102, 241, 0.1)' : 'transparent',
+              transition: 'all 0.2s',
+              margin: '0 8px',
+            }}
+          >
+            <Wallet size={18} />
+            <Text style={{ fontSize: 13, fontWeight: location.pathname === '/wallet' ? 600 : 500, color: 'inherit' }}>
+              Ví điểm
+            </Text>
+          </div>
+        </div>
+      )}
 
       <FloatButton.BackTop duration={400} style={{ right: 24, bottom: 80 }} />
     </Layout>

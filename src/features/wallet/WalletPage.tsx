@@ -1,14 +1,14 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Card, Typography, Flex, Row, Col, Button, Space, Badge, Divider, Tag, message } from 'antd';
-import { Wallet, CreditCard, QrCode, Info, RefreshCcw, Copy, ArrowDownRight } from 'lucide-react';
+import { CreditCard, QrCode, Info, Copy, ArrowDownRight, Coins } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { useExamStore } from '../../store/examStore';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const WalletPage = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
-  const refreshBalance = useAuthStore((state) => state.refreshBalance);
+
 
   const subjects = useExamStore((state) => state.subjects);
   const unlockedSubjectIds = useExamStore((state) => state.unlockedSubjectIds);
@@ -21,19 +21,17 @@ const WalletPage = () => {
   }, [unlockedSubjectIds, subjects]);
 
   const amount = 50000;
-  const [refreshing, setRefreshing] = useState(false);
 
-  const handleRefresh = async () => {
-    setRefreshing(true);
-    await refreshBalance();
-    message.success('Đã cập nhật số dư mới nhất');
-    setRefreshing(false);
-  };
 
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
     message.success(`Đã sao chép ${label}`);
   };
+
+  const transferContent = useMemo(() => {
+    if (!currentUser?.email) return 'ICTU-LMS';
+    return currentUser.email.split('@')[0];
+  }, [currentUser]);
 
   // VietQR generation URL
   // Format: https://img.vietqr.io/image/<BANK_ID>-<ACCOUNT_NO>-<TEMPLATE>.png?amount=<AMOUNT>&addInfo=<DESCRIPTION>&accountName=<ACCOUNT_NAME>
@@ -42,42 +40,19 @@ const WalletPage = () => {
     const accountNo = '01967092701';
     const template = 'qr_only';
     const accountName = 'Phan Binh Tuan';
-    const addInfo = currentUser?.email || 'ICTU-LMS';
 
-    return `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?amount=${amount}&addInfo=${encodeURIComponent(addInfo)}&accountName=${encodeURIComponent(accountName)}`;
-  }, [amount, currentUser?.email]);
+    return `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?amount=${amount}&addInfo=${encodeURIComponent(transferContent)}&accountName=${encodeURIComponent(accountName)}`;
+  }, [amount, transferContent]);
 
   return (
     <div style={{ animation: 'fadeIn 0.4s ease-out' }}>
-      {/* Page Header */}
-      <Flex vertical align="center" style={{ marginBottom: 40, textAlign: 'center' }}>
-        <div
-          style={{
-            width: 64,
-            height: 64,
-            borderRadius: 20,
-            background: 'var(--gradient-success)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            marginBottom: 16,
-            boxShadow: '0 8px 32px rgba(16,185,129,0.2)',
-          }}
-        >
-          <Wallet size={32} />
-        </div>
-        <Title level={2} style={{ margin: 0, letterSpacing: -0.5 }}>Ví điểm của tôi</Title>
-        <Text type="secondary">Quản lý và nạp thêm coint để tải đề cương</Text>
-      </Flex>
-
       <Row gutter={[24, 24]}>
         {/* Left Column: Balance & Info */}
         <Col xs={24} lg={14}>
-          <Space direction="vertical" size={24} style={{ width: '100%' }}>
+          <Space orientation="vertical" size={24} style={{ width: '100%' }}>
             {/* Balance Card */}
             <Card
-              bordered={false}
+              variant="borderless"
               style={{
                 background: 'var(--gradient-primary)',
                 borderRadius: 24,
@@ -85,10 +60,7 @@ const WalletPage = () => {
                 position: 'relative',
                 boxShadow: '0 20px 40px rgba(99, 102, 241, 0.2)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
-                transition: 'transform 0.3s ease',
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateY(-4px)')}
-              onMouseLeave={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
             >
               {/* Decorative background shapes */}
               <div
@@ -121,7 +93,7 @@ const WalletPage = () => {
                       Số dư hiện tại
                     </Text>
                     <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginTop: 8 }}>
-                      <span style={{ color: 'white', fontSize: 56, fontWeight: 800, lineHeight: 1, textShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+                      <span style={{ color: 'white', fontSize: 36, fontWeight: 800, lineHeight: 1, textShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
                         {currentUser?.coin?.toLocaleString() || 0}
                       </span>
                       <span style={{ color: 'white', opacity: 0.9, fontSize: 20, fontWeight: 600 }}>Coin</span>
@@ -144,22 +116,21 @@ const WalletPage = () => {
                       </Tag>
                     </div>
                   </div>
-                  <Button
-                    type="text"
-                    icon={<RefreshCcw size={18} className={refreshing ? 'animate-spin' : ''} />}
-                    onClick={handleRefresh}
-                    loading={refreshing}
-                    style={{
-                      color: 'white',
-                      background: 'rgba(255,255,255,0.15)',
-                      backdropFilter: 'blur(10px)',
-                      borderRadius: 12,
-                      height: 40,
-                      paddingInline: 16
-                    }}
-                  >
-                    Làm mới
-                  </Button>
+                  <div style={{
+                    background: 'rgba(167, 112, 68, 0.2)',
+                    backdropFilter: 'blur(10px)',
+                    borderRadius: 12,
+                    padding: '8px 16px',
+                    border: '1px solid rgba(167, 112, 68, 0.3)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    color: '#D4AF37', // This is gold, let's use a coppery bronze
+                    fontWeight: 600,
+                  }}>
+                    <Coins size={18} style={{ color: '#CD7F32' }} />
+                    <span style={{ color: '#E5E7EB' }}>Hạng Đồng</span>
+                  </div>
                 </Flex>
 
                 <div style={{
@@ -182,7 +153,7 @@ const WalletPage = () => {
             {/* Recharge Info Card */}
             <Card
               title={<Flex align="center" gap={8}><CreditCard size={18} /><span>Thông tin nạp tiền</span></Flex>}
-              bordered={false}
+              variant="borderless"
               style={{
                 borderRadius: 20,
                 boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
@@ -190,7 +161,7 @@ const WalletPage = () => {
                 backdropFilter: 'blur(10px)',
               }}
             >
-              <Space direction="vertical" size={16} style={{ width: '100%' }}>
+              <Space orientation="vertical" size={16} style={{ width: '100%' }}>
                 <Flex justify="space-between" align="center">
                   <Text type="secondary">Tên đại lý thụ hưởng</Text>
                   <Flex align="center" gap={8}>
@@ -215,15 +186,15 @@ const WalletPage = () => {
                 <Flex justify="space-between" align="center">
                   <Text type="secondary">Nội dung chuyển khoản</Text>
                   <Flex align="center" gap={8}>
-                    <Text strong style={{ color: '#e11d48' }}>{currentUser?.email}</Text>
-                    <Button type="text" size="small" icon={<Copy size={12} />} onClick={() => copyToClipboard(currentUser?.email || '', 'nội dung')} />
+                    <Text strong style={{ color: '#e11d48' }}>{transferContent}</Text>
+                    <Button type="text" size="small" icon={<Copy size={12} />} onClick={() => copyToClipboard(transferContent, 'nội dung')} />
                   </Flex>
                 </Flex>
               </Space>
 
               <div style={{ marginTop: 24, padding: 16, background: '#fffbeb', borderRadius: 12, border: '1px solid #fef3c7' }}>
                 <Text style={{ fontSize: 13, color: '#92400e' }}>
-                  <b>Lưu ý:</b> Vui lòng nhập đúng nội dung chuyển khoản là địa chỉ <b>Email</b> của bạn để hệ thống có thể tự động cộng Coin sau 1-5 phút.
+                  <b>Lưu ý:</b> Vui lòng nhập đúng nội dung chuyển khoản là <b>{transferContent}</b> để hệ thống có thể tự động cộng Coin sau 1-5 phút.
                 </Text>
               </div>
             </Card>
@@ -234,7 +205,7 @@ const WalletPage = () => {
         <Col xs={24} lg={10}>
           <Card
             title={<Flex align="center" gap={8}><QrCode size={18} /><span>Nạp nhanh qua QR</span></Flex>}
-            bordered={false}
+            variant="borderless"
             style={{
               height: '100%',
               borderRadius: 24,

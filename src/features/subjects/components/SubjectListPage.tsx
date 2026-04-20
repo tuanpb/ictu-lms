@@ -10,7 +10,6 @@ import {
   Badge,
   Modal,
   message,
-  Tag,
 } from 'antd';
 import {
   Search,
@@ -109,7 +108,6 @@ const SubjectListPage = () => {
           background: 'rgba(245, 245, 245, 0.85)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
-          marginBottom: 16,
           borderRadius: 16,
         }}
       >
@@ -157,8 +155,8 @@ const SubjectListPage = () => {
                   <Flex justify="space-between" align="flex-start">
                     <div
                       style={{
-                        width: 52,
-                        height: 52,
+                        width: 38,
+                        height: 38,
                         borderRadius: 12,
                         background: isUnlocked ? '#10b98115' : `${cardColor}20`,
                         color: isUnlocked ? '#10b981' : cardColor,
@@ -170,38 +168,38 @@ const SubjectListPage = () => {
                     >
                       {isUnlocked ? <Unlock size={24} /> : <Lock size={24} />}
                     </div>
-                    {isUnlocked ? (
-                      <Tag color="success" style={{ margin: 0, borderRadius: 12 }}>Đã sở hữu</Tag>
-                    ) : (
-                      <Badge
-                        count={`${subject.unlockCoin} Coin`}
-                        style={{
-                          backgroundColor: '#f59e0b',
-                          borderColor: '#f59e0b',
-                        }}
-                      />
-                    )}
+                    <Flex vertical align="flex-end" gap={8}>
+                      <div style={{ display: 'flex', alignItems: 'center', color: isUnlocked ? '#10b981' : 'var(--text-muted)' }}>
+                        {isUnlocked ? (
+                          <span style={{ fontSize: 13, display: 'flex', alignItems: 'center', gap: 4, fontWeight: 500 }}>
+                            <CheckCircle size={14} /> Vào học ngay
+                          </span>
+                        ) : (
+                          <span style={{ fontSize: 13, display: 'flex', alignItems: 'center', gap: 4, fontWeight: 500 }}>
+                            <Lock size={14} /> Mở khóa ngay
+                          </span>
+                        )}
+                      </div>
+                      {!isUnlocked && (
+                        <Badge
+                          count={`${subject.unlockCoin} Coin`}
+                          style={{
+                            backgroundColor: '#f59e0b',
+                            borderColor: '#f59e0b',
+                            boxShadow: '0 2px 4px rgba(245,158,11,0.2)'
+                          }}
+                        />
+                      )}
+                    </Flex>
                   </Flex>
 
-                  <Title level={5} style={{ margin: '0 0 4px', color: 'var(--text-primary)' }}>
+                  <Title level={5} style={{ margin: '0 0 8px', color: 'var(--text-primary)' }}>
                     {subject.name}
                   </Title>
 
-                  <Text type="secondary" style={{ fontSize: 13, display: 'block', marginBottom: 16, minHeight: 40 }}>
+                  <Text type="secondary" style={{ fontSize: 13, display: 'block', minHeight: 40, margin: 0 }}>
                     {subject.description || 'Chưa có mô tả cho môn học này.'}
                   </Text>
-
-                  <div style={{ display: 'flex', alignItems: 'center', color: isUnlocked ? '#10b981' : 'var(--text-muted)' }}>
-                    {isUnlocked ? (
-                      <span style={{ fontSize: 12, display: 'flex', alignItems: 'center', gap: 4 }}>
-                        <CheckCircle size={14} /> Vào học ngay
-                      </span>
-                    ) : (
-                      <span style={{ fontSize: 12, display: 'flex', alignItems: 'center', gap: 4 }}>
-                        <Lock size={14} /> Mở khóa ngay
-                      </span>
-                    )}
-                  </div>
                 </Card>
               </Col>
             );
