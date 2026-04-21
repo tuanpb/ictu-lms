@@ -183,18 +183,20 @@ const AppLayout = () => {
                   background: 'var(--gradient-primary)',
                 }}
               />
-              <Text
-                style={{
-                  color: 'var(--text-secondary)',
-                  fontSize: 14,
-                  maxWidth: 120,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {currentUser?.fullName ?? currentUser?.email ?? 'Người dùng'}
-              </Text>
+              {screens.md && (
+                <Text
+                  style={{
+                    color: 'var(--text-secondary)',
+                    fontSize: 14,
+                    maxWidth: 120,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {currentUser?.fullName ?? currentUser?.email ?? 'Người dùng'}
+                </Text>
+              )}
             </Space>
           </Dropdown>
         </Space>

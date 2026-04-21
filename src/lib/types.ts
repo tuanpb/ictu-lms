@@ -20,6 +20,7 @@ export interface Subject {
   dataUrl?: string;
   unlockCoin: number;
   examCount?: number;
+  active?: number;
 }
 
 /** Đáp án cho một câu hỏi */

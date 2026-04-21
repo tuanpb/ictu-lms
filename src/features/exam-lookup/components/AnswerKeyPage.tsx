@@ -1,6 +1,6 @@
 import { useMemo, useState, useDeferredValue, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button, Tag, Empty, Typography, Flex, Row, Col, Card, Input, Modal, message, Checkbox } from 'antd';
+import { Button, Tag, Empty, Typography, Flex, Row, Col, Card, Input, Modal, message, Checkbox, Grid } from 'antd';
 import { Search, Lock, Unlock, Download } from 'lucide-react';
 import { useExamStore } from '../../../store/examStore';
 import { useAuthStore } from '../../../store/authStore';
@@ -13,6 +13,7 @@ const ANSWER_OPTIONS = ['A', 'B', 'C', 'D'] as const;
 const AnswerKeyPage = () => {
   const { subjectId } = useParams<{ subjectId?: string }>();
   const navigate = useNavigate();
+  const screens = Grid.useBreakpoint();
 
   const subjects = useExamStore((state) => state.subjects);
   const loadingQuestions = useExamStore((state) => state.loadingQuestions);
@@ -104,8 +105,8 @@ const AnswerKeyPage = () => {
 
   if (loadingQuestions) {
     return (
-      <Flex vertical align="center" justify="center" gap={16} style={{ padding: 100 }}>
-        <Title level={4}>Đang tải bộ đề...</Title>
+      <Flex vertical align="center" justify="center" gap={16} style={{ padding: '100px 20px', width: '100%', textAlign: 'center' }}>
+        <Title level={4} style={{ margin: 0 }}>Đang tải bộ đề...</Title>
         <Text type="secondary">Vui lòng chờ trong giây lát</Text>
       </Flex>
     );
@@ -366,13 +367,15 @@ const AnswerKeyPage = () => {
       >
         <Flex justify="space-between" align="center" wrap="wrap" gap={16}>
           <div>
-            <Title level={2} style={{ margin: '0 0 4px', color: 'var(--text-primary)', letterSpacing: -0.5 }}>
-              {subject.name}
+            <Title level={screens.md ? 2 : 4} style={{ margin: '0 0 4px', color: 'var(--text-primary)', letterSpacing: -0.5 }}>
+              {subject.name} {!screens.md && <Text type="secondary" style={{ fontSize: 14, fontWeight: 'normal', whiteSpace: 'nowrap' }}>({exam.totalQuestions} câu)</Text>}
             </Title>
-            <Flex align="center" gap={8}>
-              <Tag color="blue">{exam.examCode}</Tag>
-              <Text type="secondary">{exam.totalQuestions} câu</Text>
-            </Flex>
+            {screens.md && (
+              <Flex align="center" gap={8}>
+                <Tag color="blue">{exam.examCode}</Tag>
+                <Text type="secondary">{exam.totalQuestions} câu</Text>
+              </Flex>
+            )}
           </div>
 
           <Flex align="center" gap={16} wrap="wrap" style={{ flex: 1, justifyContent: 'flex-end' }}>
@@ -388,7 +391,7 @@ const AnswerKeyPage = () => {
               onChange={(e) => setShowOnlyCorrect(e.target.checked)}
               style={{ fontWeight: 500 }}
             >
-              Chỉ hiện đáp án đúng
+              Ẩn đáp án sai
             </Checkbox>
             <div style={{ maxWidth: 320, width: '100%' }}>
               <Input

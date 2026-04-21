@@ -170,18 +170,20 @@ export const useExamStore = create<ExamState>()(
         try {
           const { data, error } = await supabase
             .from('subjects')
-            .select('id, name, description, unlock_coin') // Security: exclude data_url
+            .select('id, name, description, unlock_coin, active')
+            .eq('active', 1)
             .order('name', { ascending: true });
 
           if (error) throw error;
 
           if (data) {
-            const mappedSubjects: Subject[] = data.map((item: { id: string; name: string; description?: string; unlock_coin: string | number }) => ({
+            const mappedSubjects: Subject[] = data.map((item: { id: string; name: string; description?: string; unlock_coin: string | number; active?: number }) => ({
               id: item.id,
               name: item.name,
               description: item.description,
               unlockCoin: Number(item.unlock_coin) || 0,
               examCount: 1,
+              active: item.active || 1,
             }));
             set({ subjects: mappedSubjects, lastFetchedSubjects: Date.now() });
           }

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Card, Typography, Flex, Row, Col, Button, Space, Badge, Divider, Tag, message } from 'antd';
-import { CreditCard, QrCode, Info, Copy, ArrowDownRight, Coins } from 'lucide-react';
+import { CreditCard, QrCode, Info, Copy, ArrowDownRight } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { useExamStore } from '../../store/examStore';
 
@@ -115,21 +115,6 @@ const WalletPage = () => {
                         </span>
                       </Tag>
                     </div>
-                  </div>
-                  <div style={{
-                    background: 'rgba(167, 112, 68, 0.2)',
-                    backdropFilter: 'blur(10px)',
-                    borderRadius: 12,
-                    padding: '8px 16px',
-                    border: '1px solid rgba(167, 112, 68, 0.3)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 8,
-                    color: '#D4AF37', // This is gold, let's use a coppery bronze
-                    fontWeight: 600,
-                  }}>
-                    <Coins size={18} style={{ color: '#CD7F32' }} />
-                    <span style={{ color: '#E5E7EB' }}>Hạng Đồng</span>
                   </div>
                 </Flex>
 
