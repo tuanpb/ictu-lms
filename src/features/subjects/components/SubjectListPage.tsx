@@ -235,11 +235,11 @@ const SubjectListPage = () => {
             color: '#92400e'
           }}>
             <Text style={{ color: '#92400e' }}>
-              Phí mở khóa: <b>{selectedSubject?.unlockCoin} Coin</b>
+              Phí mở khóa: <b>{selectedSubject?.unlockCoin} Xu</b>
             </Text>
             <br />
             <Text style={{ fontSize: 12 }}>
-              Số dư hiện tại: {currentUser?.coin || 0} Coin
+              Số dư hiện tại: {currentUser?.coin || 0} Xu
             </Text>
           </div>
         </Flex>

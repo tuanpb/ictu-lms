@@ -96,7 +96,7 @@ const WalletPage = () => {
                       <span style={{ color: 'white', fontSize: 36, fontWeight: 800, lineHeight: 1, textShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
                         {currentUser?.coin?.toLocaleString() || 0}
                       </span>
-                      <span style={{ color: 'white', opacity: 0.9, fontSize: 20, fontWeight: 600 }}>Coin</span>
+                      <span style={{ color: 'white', opacity: 0.9, fontSize: 20, fontWeight: 600 }}>Xu</span>
                     </div>
                     <div style={{ marginTop: 8 }}>
                       <Tag color="red" style={{

@@ -155,7 +155,7 @@ const AnswerKeyPage = () => {
               alignItems: 'center',
               gap: 12
             }}>
-              <Text strong style={{ fontSize: 18, color: '#f59e0b' }}>{subject.unlockCoin} Coin</Text>
+              <Text strong style={{ fontSize: 18, color: '#f59e0b' }}>{subject.unlockCoin} Xu</Text>
               <div style={{ width: 1, height: 20, background: '#e2e8f0' }} />
               <Text type="secondary">Phí mở khóa vĩnh viễn</Text>
             </div>
