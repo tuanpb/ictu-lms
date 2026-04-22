@@ -16,7 +16,7 @@ const AppLayout = () => {
   const logout = useAuthStore((state) => state.logout);
   const validateSession = useAuthStore((state) => state.validateSession);
 
-  // Check for session validity on route change
+  // Kiểm tra tính hợp lệ của phiên đăng nhập khi thay đổi route
   useEffect(() => {
     if (currentUser) {
       void validateSession();

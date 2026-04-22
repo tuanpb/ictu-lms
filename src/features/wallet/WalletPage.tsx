@@ -33,8 +33,8 @@ const WalletPage = () => {
     return currentUser.email.split('@')[0];
   }, [currentUser]);
 
-  // VietQR generation URL
-  // Format: https://img.vietqr.io/image/<BANK_ID>-<ACCOUNT_NO>-<TEMPLATE>.png?amount=<AMOUNT>&addInfo=<DESCRIPTION>&accountName=<ACCOUNT_NAME>
+  // URL tạo mã VietQR
+  // Định dạng: https://img.vietqr.io/image/<BANK_ID>-<ACCOUNT_NO>-<TEMPLATE>.png?amount=<AMOUNT>&addInfo=<DESCRIPTION>&accountName=<ACCOUNT_NAME>
   const qrUrl = useMemo(() => {
     const bankId = 'TPB';
     const accountNo = '01967092701';
@@ -47,10 +47,10 @@ const WalletPage = () => {
   return (
     <div style={{ animation: 'fadeIn 0.4s ease-out' }}>
       <Row gutter={[24, 24]}>
-        {/* Left Column: Balance & Info */}
+        {/* Cột trái: Số dư & Thông tin */}
         <Col xs={24} lg={14}>
           <Space orientation="vertical" size={24} style={{ width: '100%' }}>
-            {/* Balance Card */}
+            {/* Thẻ số dư */}
             <Card
               variant="borderless"
               style={{
@@ -62,7 +62,7 @@ const WalletPage = () => {
                 border: '1px solid rgba(255, 255, 255, 0.1)',
               }}
             >
-              {/* Decorative background shapes */}
+              {/* Hình khối trang trí nền */}
               <div
                 style={{
                   position: 'absolute',
@@ -135,7 +135,7 @@ const WalletPage = () => {
               </Flex>
             </Card>
 
-            {/* Recharge Info Card */}
+            {/* Thẻ thông tin nạp tiền */}
             <Card
               title={<Flex align="center" gap={8}><CreditCard size={18} /><span>Thông tin nạp tiền</span></Flex>}
               variant="borderless"
@@ -186,7 +186,7 @@ const WalletPage = () => {
           </Space>
         </Col>
 
-        {/* Right Column: QR Generator */}
+        {/* Cột phải: Trình tạo mã QR */}
         <Col xs={24} lg={10}>
           <Card
             title={<Flex align="center" gap={8}><QrCode size={18} /><span>Nạp nhanh qua QR</span></Flex>}

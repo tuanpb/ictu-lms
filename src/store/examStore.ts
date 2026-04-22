@@ -12,7 +12,7 @@ interface ExamState {
   loadingQuestions: boolean;
   currentExam: Exam | null;
   unlockedSubjectIds: string[];
-  unlockedDataUrls: Record<string, string>; // Maps subjectId to dataUrl
+  unlockedDataUrls: Record<string, string>; // Ánh xạ từ ID môn học sang URL dữ liệu
   initializeData: () => Promise<void>;
   fetchSubjects: (forceRefresh?: boolean) => Promise<void>;
   fetchUnlockedSubjects: () => Promise<void>;
@@ -45,7 +45,7 @@ export const useExamStore = create<ExamState>()(
         const { data: { session } } = await supabase.auth.getSession();
         if (!session?.user) return;
 
-        // JOIN with subjects to get data_url securely
+        // Kết hợp (JOIN) với bảng subjects để lấy data_url một cách an toàn
         const { data, error } = await supabase
           .from('user_subjects')
           .select('subject_id, subjects(data_url)')
@@ -108,7 +108,7 @@ export const useExamStore = create<ExamState>()(
           return { success: false, error: 'Lỗi khi kích hoạt môn học' };
         }
 
-        // Re-fetch to get the data_url for the newly unlocked subject
+        // Tải lại để lấy data_url cho môn học vừa mở khóa
         await get().fetchUnlockedSubjects();
 
         return { success: true };

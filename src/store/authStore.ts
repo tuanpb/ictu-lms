@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { Session, User as SupabaseUser } from '@supabase/supabase-js';
+import type { AuthChangeEvent, Session, User as SupabaseUser } from '@supabase/supabase-js';
 import type { User } from '../lib/types';
 import { supabase } from '../lib/supabase';
 import { mapAuthError } from '../lib/authUtils';
@@ -47,26 +47,31 @@ interface AuthState {
 const syncSession = async (
   session: Session | null,
   set: (partial: Partial<AuthState>) => void,
-  logout: () => Promise<string | null>
+  logout: () => Promise<string | null>,
+  event?: AuthChangeEvent | null
 ) => {
   if (session?.user) {
     const localId = getLocalSessionId();
-    
-    // Fetch profile data for extra info like coins and last_session_id
+
+    // Lấy dữ liệu hồ sơ để có thêm thông tin như xu và ID phiên đăng nhập cuối cùng
     const { data: profile } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', session.user.id)
       .single();
 
-    // Check if session is valid (matches this device)
-    if (profile && profile.last_session_id && profile.last_session_id !== localId) {
+    // Kiểm tra xem phiên đăng nhập có hợp lệ không (khớp với thiết bị này)
+    // QUAN TRỌNG: Bỏ qua kiểm tra sự kiện SIGNED_IN để cho phép thiết bị mới xác nhận phiên đăng nhập
+    // và sự kiện INITIAL_SESSION để tránh bị đăng xuất ngay lập tức khi ứng dụng đang tải
+    const isNewLogin = event === 'SIGNED_IN';
+
+    if (profile && profile.last_session_id && profile.last_session_id !== localId && !isNewLogin) {
       const { notification } = await import('antd');
       notification.warning({
         message: 'Phiên đăng nhập hết hạn',
         description: 'Tài khoản của bạn đã được đăng nhập ở một thiết bị khác. Vui lòng đăng nhập lại.',
         placement: 'top',
-        duration: 0, // Keep until closed
+        duration: 8,
       });
       await logout();
       return;
@@ -94,13 +99,12 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     } = await supabase.auth.getSession();
 
     const { logout } = get();
-    await syncSession(session, set, logout);
+    await syncSession(session, set, logout, 'INITIAL_SESSION');
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, nextSession) => {
-      if (event === 'INITIAL_SESSION') return;
-      syncSession(nextSession, set, logout);
+      syncSession(nextSession, set, logout, event);
     });
 
     return () => {
@@ -120,14 +124,14 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
     if (data.user) {
       const localId = getLocalSessionId();
-      
-      // Update last_session_id in profiles
+
+      // Cập nhật last_session_id trong hồ sơ người dùng
       await supabase
         .from('profiles')
         .update({ last_session_id: localId })
         .eq('id', data.user.id);
 
-      // Fetch profile to get coins
+      // Lấy hồ sơ để lấy thông tin xu
       const { data: profile } = await supabase
         .from('profiles')
         .select('*')
@@ -155,8 +159,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
     if (data.session?.user) {
       const localId = getLocalSessionId();
-      
-      // Update last_session_id in profiles
+
+      // Cập nhật last_session_id trong hồ sơ người dùng
       await supabase
         .from('profiles')
         .update({ last_session_id: localId })

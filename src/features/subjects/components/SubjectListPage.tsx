@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Card,
@@ -33,16 +33,27 @@ const SubjectListPage = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
 
   const [searchValue, setSearchValue] = useState('');
+  const [debouncedSearchValue, setDebouncedSearchValue] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
   const [isUnlocking, setIsUnlocking] = useState(false);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchValue(searchValue);
+    }, 400);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchValue]);
 
   const filteredSubjects = useMemo(() => {
     let result = [...subjects];
 
     // Tìm kiếm
-    if (searchValue) {
-      const query = searchValue.toLowerCase();
+    if (debouncedSearchValue) {
+      const query = debouncedSearchValue.toLowerCase();
       result = result.filter(
         (subject) =>
           subject.name.toLowerCase().includes(query) ||
@@ -60,7 +71,7 @@ const SubjectListPage = () => {
 
       return a.name.localeCompare(b.name);
     });
-  }, [subjects, searchValue, unlockedSubjectIds]);
+  }, [subjects, debouncedSearchValue, unlockedSubjectIds]);
 
   const handleSubjectClick = (subject: Subject) => {
     const isUnlocked = unlockedSubjectIds.includes(subject.id);

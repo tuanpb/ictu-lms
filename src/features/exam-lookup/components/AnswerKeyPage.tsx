@@ -1,4 +1,4 @@
-import { useMemo, useState, useDeferredValue, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Tag, Empty, Typography, Flex, Row, Col, Card, Input, Modal, message, Checkbox, Grid } from 'antd';
 import { Search, Lock, Unlock, Download } from 'lucide-react';
@@ -89,19 +89,29 @@ const AnswerKeyPage = () => {
   }, [exam]);
 
   const [searchValue, setSearchValue] = useState('');
+  const [debouncedSearchValue, setDebouncedSearchValue] = useState('');
   const [showOnlyCorrect, setShowOnlyCorrect] = useState(false);
-  const deferredSearch = useDeferredValue(searchValue);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchValue(searchValue);
+    }, 400);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchValue]);
 
   const filteredAnswers = useMemo(() => {
     if (!exam) return [];
-    if (!deferredSearch) return exam.answers;
-    const query = deferredSearch.toLowerCase();
+    if (!debouncedSearchValue) return exam.answers;
+    const query = debouncedSearchValue.toLowerCase();
     return exam.answers.filter(
       (answer) =>
         answer.questionText?.toLowerCase().includes(query) ||
         answer.questionNumber.toString().includes(query)
     );
-  }, [deferredSearch, exam]);
+  }, [debouncedSearchValue, exam]);
 
   if (loadingQuestions) {
     return (
