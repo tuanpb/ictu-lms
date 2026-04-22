@@ -72,11 +72,34 @@ const SubjectListPage = () => {
     }
   };
 
+  const isInsufficientBalance = (currentUser?.coin ?? 0) < (selectedSubject?.unlockCoin ?? 0);
+
+  const transferContent = useMemo(() => {
+    if (!currentUser?.email) return 'ICTU-LMS';
+    return currentUser.email.split('@')[0];
+  }, [currentUser]);
+
+  const qrUrl = useMemo(() => {
+    if (!selectedSubject) return '';
+    const bankId = 'TPB';
+    const accountNo = '01967092701';
+    const template = 'qr_only';
+    const accountName = 'Phan Binh Tuan';
+    const amount = selectedSubject.unlockCoin;
+
+    return `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?amount=${amount}&addInfo=${encodeURIComponent(transferContent)}&accountName=${encodeURIComponent(accountName)}`;
+  }, [selectedSubject, transferContent]);
+
   const handleConfirmUnlock = async () => {
     if (!selectedSubject) return;
     if (!currentUser) {
       message.warning('Vui lòng đăng nhập để mở khóa môn học');
       navigate('/login');
+      return;
+    }
+
+    if (isInsufficientBalance) {
+      message.warning('Số dư của bạn vẫn chưa đủ. Vui lòng nạp thêm.');
       return;
     }
 
@@ -215,33 +238,79 @@ const SubjectListPage = () => {
       )}
 
       <Modal
-        title="Xác nhận mở khóa môn học"
+        title={isInsufficientBalance ? "Nạp thêm Xu để mở khóa" : "Xác nhận mở khóa môn học"}
         open={isModalVisible}
         onOk={handleConfirmUnlock}
         onCancel={() => setIsModalVisible(false)}
         confirmLoading={isUnlocking}
+        okButtonProps={isInsufficientBalance ? { style: { display: 'none' } } : {}}
         okText="Mở khóa ngay"
-        cancelText="Hủy"
+        cancelText={isInsufficientBalance ? "Đóng" : "Hủy"}
         centered
-        style={{ borderRadius: 16 }}
+        width={isInsufficientBalance ? 420 : 520}
+        style={{ borderRadius: 20, overflow: 'hidden' }}
       >
-        <Flex vertical gap={12} style={{ padding: '16px 0' }}>
-          <Text>Bạn có chắc chắn muốn mở khóa môn học <b>{selectedSubject?.name}</b>?</Text>
-          <div style={{
-            padding: 16,
-            background: '#fef3c7',
-            borderRadius: 12,
-            border: '1px solid #fcd34d',
-            color: '#92400e'
-          }}>
-            <Text style={{ color: '#92400e' }}>
-              Phí mở khóa: <b>{selectedSubject?.unlockCoin} Xu</b>
-            </Text>
-            <br />
-            <Text style={{ fontSize: 12 }}>
-              Số dư hiện tại: {currentUser?.coin || 0} Xu
-            </Text>
-          </div>
+        <Flex vertical gap={16} style={{ padding: '8px 0' }}>
+          {isInsufficientBalance ? (
+            <>
+              <div style={{
+                padding: '12px 16px',
+                background: '#fff1f2',
+                borderRadius: 12,
+                border: '1px solid #fecdd3',
+                color: '#be123c',
+                fontSize: 14
+              }}>
+                Số dư hiện tại của bạn không đủ để mở khóa môn học này. Vui lòng nạp thêm <b>{((selectedSubject?.unlockCoin ?? 0) - (currentUser?.coin ?? 0)).toLocaleString()} Xu</b>.
+              </div>
+              
+              <div style={{ textAlign: 'center' }}>
+                <div style={{
+                  padding: 16,
+                  background: 'white',
+                  borderRadius: 16,
+                  border: '1px solid #e5e7eb',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+                  margin: '0 auto',
+                  maxWidth: 240,
+                }}>
+                  <img
+                    src={qrUrl}
+                    alt="Recharge QR"
+                    style={{ width: '100%', height: 'auto', display: 'block' }}
+                  />
+                </div>
+                <div style={{ marginTop: 12 }}>
+                  <Text type="secondary" style={{ fontSize: 12 }}>Nội dung chuyển khoản:</Text>
+                  <br />
+                  <Text strong style={{ fontSize: 16, color: '#e11d48' }}>{transferContent}</Text>
+                </div>
+              </div>
+
+              <div style={{ fontSize: 12, color: 'var(--text-muted)', textAlign: 'center' }}>
+                Hệ thống sẽ tự động cộng Xu sau 1-5 phút chuyển khoản thành công.
+              </div>
+            </>
+          ) : (
+            <>
+              <Text>Bạn có chắc chắn muốn mở khóa môn học <b>{selectedSubject?.name}</b>?</Text>
+              <div style={{
+                padding: 16,
+                background: '#fef3c7',
+                borderRadius: 12,
+                border: '1px solid #fcd34d',
+                color: '#92400e'
+              }}>
+                <Text style={{ color: '#92400e' }}>
+                  Phí mở khóa: <b>{selectedSubject?.unlockCoin} Xu</b>
+                </Text>
+                <br />
+                <Text style={{ fontSize: 12 }}>
+                  Số dư hiện tại: {currentUser?.coin || 0} Xu
+                </Text>
+              </div>
+            </>
+          )}
         </Flex>
       </Modal>
     </div>
