@@ -7,7 +7,17 @@ import { mapAuthError } from '../lib/authUtils';
 interface UserProfile {
   full_name?: string | null;
   coin?: number | null;
+  last_session_id?: string | null;
 }
+
+const getLocalSessionId = () => {
+  let id = localStorage.getItem('dhtn_lms_session_id');
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem('dhtn_lms_session_id', id);
+  }
+  return id;
+};
 
 const mapSupabaseUser = (authUser: SupabaseUser, profile?: UserProfile | null): User => ({
   id: authUser.id,
@@ -20,6 +30,7 @@ const mapSupabaseUser = (authUser: SupabaseUser, profile?: UserProfile | null): 
   email: authUser.email ?? '',
   coin: profile?.coin ?? 0,
   createdAt: authUser.created_at ?? new Date().toISOString(),
+  lastSessionId: profile?.last_session_id ?? null,
 });
 
 interface AuthState {
@@ -30,19 +41,36 @@ interface AuthState {
   register: (email: string, password: string) => Promise<string | null>;
   logout: () => Promise<string | null>;
   refreshBalance: () => Promise<void>;
+  validateSession: () => Promise<void>;
 }
 
 const syncSession = async (
   session: Session | null,
-  set: (partial: Partial<AuthState>) => void
+  set: (partial: Partial<AuthState>) => void,
+  logout: () => Promise<string | null>
 ) => {
   if (session?.user) {
-    // Fetch profile data for extra info like coins
+    const localId = getLocalSessionId();
+    
+    // Fetch profile data for extra info like coins and last_session_id
     const { data: profile } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', session.user.id)
       .single();
+
+    // Check if session is valid (matches this device)
+    if (profile && profile.last_session_id && profile.last_session_id !== localId) {
+      const { notification } = await import('antd');
+      notification.warning({
+        message: 'Phiên đăng nhập hết hạn',
+        description: 'Tài khoản của bạn đã được đăng nhập ở một thiết bị khác. Vui lòng đăng nhập lại.',
+        placement: 'top',
+        duration: 0, // Keep until closed
+      });
+      await logout();
+      return;
+    }
 
     set({
       currentUser: mapSupabaseUser(session.user, profile),
@@ -65,13 +93,14 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       data: { session },
     } = await supabase.auth.getSession();
 
-    await syncSession(session, set);
+    const { logout } = get();
+    await syncSession(session, set, logout);
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, nextSession) => {
       if (event === 'INITIAL_SESSION') return;
-      syncSession(nextSession, set);
+      syncSession(nextSession, set, logout);
     });
 
     return () => {
@@ -90,7 +119,22 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     }
 
     if (data.user) {
-      set({ currentUser: mapSupabaseUser(data.user), isAuthReady: true });
+      const localId = getLocalSessionId();
+      
+      // Update last_session_id in profiles
+      await supabase
+        .from('profiles')
+        .update({ last_session_id: localId })
+        .eq('id', data.user.id);
+
+      // Fetch profile to get coins
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', data.user.id)
+        .single();
+
+      set({ currentUser: mapSupabaseUser(data.user, profile), isAuthReady: true });
     }
 
     return null;
@@ -110,6 +154,14 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     }
 
     if (data.session?.user) {
+      const localId = getLocalSessionId();
+      
+      // Update last_session_id in profiles
+      await supabase
+        .from('profiles')
+        .update({ last_session_id: localId })
+        .eq('id', data.session.user.id);
+
       set({ currentUser: mapSupabaseUser(data.session.user), isAuthReady: true });
     }
 
@@ -144,6 +196,29 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           coin: profile.coin,
         },
       });
+    }
+  },
+
+  validateSession: async () => {
+    const { currentUser, logout } = get();
+    if (!currentUser) return;
+
+    const localId = getLocalSessionId();
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('last_session_id')
+      .eq('id', currentUser.id)
+      .single();
+
+    if (profile && profile.last_session_id && profile.last_session_id !== localId) {
+      const { notification } = await import('antd');
+      notification.warning({
+        message: 'Phiên đăng nhập hết hạn',
+        description: 'Tài khoản của bạn đã được đăng nhập từ thiết bị khác.',
+        placement: 'top',
+        duration: 8,
+      });
+      await logout();
     }
   },
 }));

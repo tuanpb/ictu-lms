@@ -11,6 +11,7 @@ export interface User {
   coin?: number;
   password?: string;
   createdAt: string;
+  lastSessionId?: string | null;
 }
 
 export interface Subject {

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Layout, Avatar, Dropdown, Space, Typography, FloatButton, Grid, Tag } from 'antd';
 import type { MenuProps } from 'antd';
@@ -13,6 +14,14 @@ const AppLayout = () => {
   const screens = Grid.useBreakpoint();
   const currentUser = useAuthStore((state) => state.currentUser);
   const logout = useAuthStore((state) => state.logout);
+  const validateSession = useAuthStore((state) => state.validateSession);
+
+  // Check for session validity on route change
+  useEffect(() => {
+    if (currentUser) {
+      void validateSession();
+    }
+  }, [location.pathname, currentUser, validateSession]);
 
   const handleLogout = () => {
     void logout().finally(() => {
