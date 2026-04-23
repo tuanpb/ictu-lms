@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Layout, Avatar, Dropdown, Space, Typography, FloatButton, Grid, Tag } from 'antd';
+import { Layout, Avatar, Dropdown, Space, Typography, FloatButton, Grid, Tag, notification } from 'antd';
 import type { MenuProps } from 'antd';
 import { useAuthStore } from '../../store/authStore';
-import { BookOpen, Home, LogOut, User, Wallet, Coins } from 'lucide-react';
+import { BookOpen, Home, LogOut, User, Wallet, Coins, CheckCircle2 } from 'lucide-react';
+import { supabase } from '../../lib/supabase';
 
 const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
@@ -15,6 +16,44 @@ const AppLayout = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const logout = useAuthStore((state) => state.logout);
   const validateSession = useAuthStore((state) => state.validateSession);
+  const refreshBalance = useAuthStore((state) => state.refreshBalance);
+
+  // Lắng nghe thay đổi số dư theo thời gian thực (Global)
+  useEffect(() => {
+    if (!currentUser?.id) return;
+
+    const channel = supabase
+      .channel(`profile_changes_${currentUser.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'profiles',
+          filter: `id=eq.${currentUser.id}`,
+        },
+        (payload) => {
+          if (payload.new && payload.new.coin !== payload.old.coin) {
+            const addedCoin = (payload.new.coin || 0) - (payload.old.coin || 0);
+            if (addedCoin > 0) {
+              notification.success({
+                message: 'Nạp tiền thành công!',
+                description: `Tài khoản của bạn đã được cộng ${addedCoin.toLocaleString()} xu.`,
+                icon: <CheckCircle2 style={{ color: '#10b981' }} />,
+                duration: 10,
+              });
+              // Cập nhật state cục bộ
+              refreshBalance();
+            }
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [currentUser?.id, refreshBalance]);
 
   // Kiểm tra tính hợp lệ của phiên đăng nhập khi thay đổi route
   useEffect(() => {

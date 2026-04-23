@@ -108,6 +108,15 @@ export const useExamStore = create<ExamState>()(
           return { success: false, error: 'Lỗi khi kích hoạt môn học' };
         }
 
+        // Ghi log giao dịch chi tiêu
+        const subject = get().subjects.find(s => s.id === subjectId);
+        await supabase.from('coin_transactions').insert({
+          user_id: session.user.id,
+          amount: -cost,
+          type: 'PURCHASE',
+          description: `Mở khóa môn học: ${subject?.name || 'Không xác định'}`,
+        });
+
         // Tải lại để lấy data_url cho môn học vừa mở khóa
         await get().fetchUnlockedSubjects();
 

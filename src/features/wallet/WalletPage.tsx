@@ -9,7 +9,6 @@ const { Text } = Typography;
 const WalletPage = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
 
-
   const subjects = useExamStore((state) => state.subjects);
   const unlockedSubjectIds = useExamStore((state) => state.unlockedSubjectIds);
 
@@ -29,20 +28,21 @@ const WalletPage = () => {
   };
 
   const transferContent = useMemo(() => {
-    if (!currentUser?.email) return 'ICTU-LMS';
-    return currentUser.email.split('@')[0];
+    if (!currentUser?.email) return 'SEVQRLMS';
+    const emailPrefix = currentUser.email.split('@')[0];
+    return `SEVQR${emailPrefix}`;
   }, [currentUser]);
 
   // URL tạo mã VietQR
   // Định dạng: https://img.vietqr.io/image/<BANK_ID>-<ACCOUNT_NO>-<TEMPLATE>.png?amount=<AMOUNT>&addInfo=<DESCRIPTION>&accountName=<ACCOUNT_NAME>
   const qrUrl = useMemo(() => {
-    const bankId = 'TPB';
-    const accountNo = '01967092701';
+    const bankId = 'Vietinbank';
+    const accountNo = '105882450457';
     const template = 'qr_only';
     const accountName = 'Phan Binh Tuan';
 
-    return `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?amount=${amount}&addInfo=${encodeURIComponent(transferContent)}&accountName=${encodeURIComponent(accountName)}`;
-  }, [amount, transferContent]);
+    return `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?addInfo=${encodeURIComponent(transferContent)}&accountName=${encodeURIComponent(accountName)}`;
+  }, [transferContent]);
 
   return (
     <div style={{ animation: 'fadeIn 0.4s ease-out' }}>
@@ -150,22 +150,22 @@ const WalletPage = () => {
                 <Flex justify="space-between" align="center">
                   <Text type="secondary">Tên đại lý thụ hưởng</Text>
                   <Flex align="center" gap={8}>
-                    <Text strong>Phan Tuấn</Text>
-                    <Button type="text" size="small" icon={<Copy size={12} />} onClick={() => copyToClipboard('Phan Tuấn', 'tên thụ hưởng')} />
+                    <Text strong>Phan Bình Tuấn</Text>
+                    <Button type="text" size="small" icon={<Copy size={12} />} onClick={() => copyToClipboard('Phan Bình Tuấn', 'tên thụ hưởng')} />
                   </Flex>
                 </Flex>
                 <Divider style={{ margin: 0 }} />
                 <Flex justify="space-between" align="center">
                   <Text type="secondary">Số tài khoản</Text>
                   <Flex align="center" gap={8}>
-                    <Text strong style={{ fontSize: 16, color: 'var(--color-primary)' }}>01967092701</Text>
-                    <Button type="text" size="small" icon={<Copy size={12} />} onClick={() => copyToClipboard('01967092701', 'số tài khoản')} />
+                    <Text strong style={{ fontSize: 16, color: 'var(--color-primary)' }}>105882450457</Text>
+                    <Button type="text" size="small" icon={<Copy size={12} />} onClick={() => copyToClipboard('105882450457', 'số tài khoản')} />
                   </Flex>
                 </Flex>
                 <Divider style={{ margin: 0 }} />
                 <Flex justify="space-between" align="center">
                   <Text type="secondary">Ngân hàng</Text>
-                  <Tag color="purple" style={{ fontWeight: 600 }}>TP Bank</Tag>
+                  <Tag color="blue" style={{ fontWeight: 600 }}>VietinBank</Tag>
                 </Flex>
                 <Divider style={{ margin: 0 }} />
                 <Flex justify="space-between" align="center">

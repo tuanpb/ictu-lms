@@ -86,19 +86,21 @@ const SubjectListPage = () => {
   const isInsufficientBalance = (currentUser?.coin ?? 0) < (selectedSubject?.unlockCoin ?? 0);
 
   const transferContent = useMemo(() => {
-    if (!currentUser?.email) return 'ICTU-LMS';
-    return currentUser.email.split('@')[0];
+    if (!currentUser?.email) return 'SEVQRLMS';
+    const emailPrefix = currentUser.email.split('@')[0];
+    return `SEVQR${emailPrefix}`;
   }, [currentUser]);
 
   const qrUrl = useMemo(() => {
     if (!selectedSubject) return '';
-    const bankId = 'TPB';
-    const accountNo = '01967092701';
+    const bankId = 'Vietinbank';
+    const accountNo = '105882450457';
     const template = 'qr_only';
     const accountName = 'Phan Binh Tuan';
-    const amount = selectedSubject.unlockCoin;
+    const amount = selectedSubject.unlockCoin - (currentUser?.coin ?? 0);
+    console.log(amount);
 
-    return `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?amount=${amount}&addInfo=${encodeURIComponent(transferContent)}&accountName=${encodeURIComponent(accountName)}`;
+    return `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?amount=${amount * 1000}&addInfo=${encodeURIComponent(transferContent)}&accountName=${encodeURIComponent(accountName)}`;
   }, [selectedSubject, transferContent]);
 
   const handleConfirmUnlock = async () => {
@@ -274,7 +276,7 @@ const SubjectListPage = () => {
               }}>
                 Số dư hiện tại của bạn không đủ để mở khóa môn học này. Vui lòng nạp thêm <b>{((selectedSubject?.unlockCoin ?? 0) - (currentUser?.coin ?? 0)).toLocaleString()} Xu</b>.
               </div>
-              
+
               <div style={{ textAlign: 'center' }}>
                 <div style={{
                   padding: 16,
