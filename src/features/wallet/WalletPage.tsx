@@ -19,8 +19,6 @@ const WalletPage = () => {
     }, 0);
   }, [unlockedSubjectIds, subjects]);
 
-  const amount = 50000;
-
 
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
