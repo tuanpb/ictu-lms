@@ -93,9 +93,9 @@ const SubjectListPage = () => {
 
   const qrUrl = useMemo(() => {
     if (!selectedSubject) return '';
-    const bankId = 'Vietinbank';
+    const bankId = '970415';
     const accountNo = '105882450457';
-    const template = 'qr_only';
+    const template = 'compact2';
     const accountName = 'Phan Binh Tuan';
     const amount = selectedSubject.unlockCoin - (currentUser?.coin ?? 0);
 

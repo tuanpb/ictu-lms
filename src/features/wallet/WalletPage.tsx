@@ -34,9 +34,9 @@ const WalletPage = () => {
   // URL tạo mã VietQR
   // Định dạng: https://img.vietqr.io/image/<BANK_ID>-<ACCOUNT_NO>-<TEMPLATE>.png?amount=<AMOUNT>&addInfo=<DESCRIPTION>&accountName=<ACCOUNT_NAME>
   const qrUrl = useMemo(() => {
-    const bankId = 'Vietinbank';
+    const bankId = '970415';
     const accountNo = '105882450457';
-    const template = 'qr_only';
+    const template = 'compact2';
     const accountName = 'Phan Binh Tuan';
 
     return `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?addInfo=${encodeURIComponent(transferContent)}&accountName=${encodeURIComponent(accountName)}`;
