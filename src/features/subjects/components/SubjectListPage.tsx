@@ -98,7 +98,6 @@ const SubjectListPage = () => {
     const template = 'qr_only';
     const accountName = 'Phan Binh Tuan';
     const amount = selectedSubject.unlockCoin - (currentUser?.coin ?? 0);
-    console.log(amount);
 
     return `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?amount=${amount * 1000}&addInfo=${encodeURIComponent(transferContent)}&accountName=${encodeURIComponent(accountName)}`;
   }, [selectedSubject, transferContent]);

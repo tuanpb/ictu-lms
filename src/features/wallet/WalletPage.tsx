@@ -126,7 +126,7 @@ const WalletPage = () => {
                   <Flex align="center" gap={12}>
                     <Info size={18} style={{ color: 'white' }} />
                     <Text style={{ color: 'rgba(255,255,255,0.9)', fontSize: 13, fontWeight: 500 }}>
-                      Tỷ quy đổi: <b style={{ color: 'white' }}>1,000 VNĐ = 1 Coin</b>
+                      Tỷ quy đổi: <b style={{ color: 'white' }}>1,000 VNĐ = 1 Xu</b>
                     </Text>
                   </Flex>
                 </div>
