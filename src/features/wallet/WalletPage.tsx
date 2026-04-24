@@ -26,18 +26,17 @@ const WalletPage = () => {
   };
 
   const transferContent = useMemo(() => {
-    if (!currentUser?.email) return 'SEVQRLMS';
-    const emailPrefix = currentUser.email.split('@')[0];
-    return `SEVQR${emailPrefix}`;
+    if (!currentUser?.email) return 'LMS';
+    return currentUser.email.split('@')[0];
   }, [currentUser]);
 
   // URL tạo mã VietQR
   // Định dạng: https://img.vietqr.io/image/<BANK_ID>-<ACCOUNT_NO>-<TEMPLATE>.png?amount=<AMOUNT>&addInfo=<DESCRIPTION>&accountName=<ACCOUNT_NAME>
   const qrUrl = useMemo(() => {
-    const bankId = '970415';
-    const accountNo = '105882450457';
+    const bankId = 'vpbank';
+    const accountNo = '0974106084';
     const template = 'compact2';
-    const accountName = 'Phan Binh Tuan';
+    const accountName = 'NGUYEN THI MINH HANG';
 
     return `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?addInfo=${encodeURIComponent(transferContent)}&accountName=${encodeURIComponent(accountName)}`;
   }, [transferContent]);

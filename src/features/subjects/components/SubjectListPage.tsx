@@ -86,17 +86,17 @@ const SubjectListPage = () => {
   const isInsufficientBalance = (currentUser?.coin ?? 0) < (selectedSubject?.unlockCoin ?? 0);
 
   const transferContent = useMemo(() => {
-    if (!currentUser?.email) return 'SEVQRLMS';
+    if (!currentUser?.email) return 'LMS';
     const emailPrefix = currentUser.email.split('@')[0];
-    return `SEVQR${emailPrefix}`;
+    return `${emailPrefix}`;
   }, [currentUser]);
 
   const qrUrl = useMemo(() => {
     if (!selectedSubject) return '';
-    const bankId = '970415';
-    const accountNo = '105882450457';
+    const bankId = 'vpbank';
+    const accountNo = '0974106084';
     const template = 'compact2';
-    const accountName = 'Phan Binh Tuan';
+    const accountName = 'NGUYEN THI MINH HANG';
     const amount = selectedSubject.unlockCoin - (currentUser?.coin ?? 0);
 
     return `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?amount=${amount * 1000}&addInfo=${encodeURIComponent(transferContent)}&accountName=${encodeURIComponent(accountName)}`;
