@@ -36,8 +36,7 @@ export const useExamStore = create<ExamState>()(
       unlockedDataUrls: {},
 
       initializeData: async () => {
-        // Luôn làm mới danh sách môn học khi khởi tạo App (hoặc F5)
-        await get().fetchSubjects(true);
+        await get().fetchSubjects();
         await get().fetchUnlockedSubjects();
         set({ initialized: true });
       },
