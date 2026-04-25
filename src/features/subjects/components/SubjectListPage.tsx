@@ -83,12 +83,18 @@ const SubjectListPage = () => {
     }
   };
 
+  const currentSelectedSubject = useMemo(() => {
+    if (!selectedSubject) return null;
+    // Luôn tìm môn học mới nhất từ mảng subjects của store
+    return subjects.find(s => s.id === selectedSubject.id) || selectedSubject;
+  }, [subjects, selectedSubject]);
+
   const activePrice = useMemo(() => {
-    if (!selectedSubject) return 0;
-    return (selectedSubject.rentalCoin && selectedSubject.rentalCoin > 0)
-      ? selectedSubject.rentalCoin
-      : selectedSubject.unlockCoin;
-  }, [selectedSubject]);
+    if (!currentSelectedSubject) return 0;
+    return (currentSelectedSubject.rentalCoin && currentSelectedSubject.rentalCoin > 0)
+      ? currentSelectedSubject.rentalCoin
+      : currentSelectedSubject.unlockCoin;
+  }, [currentSelectedSubject]);
 
   const isInsufficientBalance = (currentUser?.coin ?? 0) < activePrice;
 
@@ -342,9 +348,9 @@ const SubjectListPage = () => {
               }}>
                 <Text style={{ color: '#92400e' }}>
                   Phí mở khóa: <b>{activePrice} Xu</b>
-                  {selectedSubject?.rentalCoin && selectedSubject.rentalCoin > 0 && (
+                  {currentSelectedSubject?.rentalCoin && currentSelectedSubject.rentalCoin > 0 && (
                     <Text delete type="secondary" style={{ fontSize: 12, marginLeft: 8, color: '#92400e80' }}>
-                      {selectedSubject.unlockCoin} Xu
+                      {currentSelectedSubject.unlockCoin} Xu
                     </Text>
                   )}
                 </Text>

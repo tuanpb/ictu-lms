@@ -17,6 +17,7 @@ import { useExamStore } from './store/examStore';
 const App = () => {
   const initializeAuth = useAuthStore((state) => state.initializeAuth);
   const initializeData = useExamStore((state) => state.initializeData);
+  const subscribeToSubjects = useExamStore((state) => state.subscribeToSubjects);
   const currentUserId = useAuthStore((state) => state.currentUser?.id);
 
   useEffect(() => {
@@ -42,6 +43,11 @@ const App = () => {
       initializeData();
     }
   }, [currentUserId, initializeData]);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToSubjects();
+    return () => unsubscribe();
+  }, [subscribeToSubjects]);
 
   return (
     <ConfigProvider

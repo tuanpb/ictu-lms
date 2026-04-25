@@ -19,9 +19,11 @@ interface ExamState {
   fetchQuestionsFromUrl: (subjectId: string, url: string) => Promise<void>;
   unlockSubject: (subjectId: string, cost: number) => Promise<{ success: boolean; error?: string }>;
   getExamBySubject: (subjectId: string) => Exam | undefined;
+  subscribeToSubjects: () => () => void;
 }
 
-const SUBJECT_CACHE_TTL = 1000 * 60 * 60; // 1 giờ
+// Bỏ SUBJECT_CACHE_TTL vì chúng ta dùng cơ chế fetch lại khi khởi động app
+// và dùng Realtime để cập nhật liên tục.
 
 export const useExamStore = create<ExamState>()(
   persist(
@@ -167,11 +169,35 @@ export const useExamStore = create<ExamState>()(
       },
 
       fetchSubjects: async (forceRefresh = false) => {
-        const { subjects, lastFetchedSubjects } = get();
-        const isStale = !lastFetchedSubjects || (Date.now() - lastFetchedSubjects > SUBJECT_CACHE_TTL);
+        const { subjects } = get();
 
-        if (!forceRefresh && subjects.length > 0 && !isStale) {
-          console.log('Sử dụng danh sách môn học từ cache');
+        // Nếu không ép buộc refresh và chưa có dữ liệu nào (lần đầu tiên hoàn toàn)
+        // thì mới hiện loading. Nếu đã có subjects từ persist, chúng ta fetch ngầm.
+        if (!forceRefresh && subjects.length > 0) {
+          // Vẫn thực hiện fetch ngầm để cập nhật dữ liệu mới nhất từ server
+          // nhưng không set loading=true để tránh nhảy giao diện
+          try {
+            const { data } = await supabase
+              .from('subjects')
+              .select('id, name, description, unlock_coin, rental_coin, active')
+              .eq('active', 1)
+              .order('name', { ascending: true });
+
+            if (data) {
+              const mappedSubjects: Subject[] = data.map((item: any) => ({
+                id: item.id,
+                name: item.name,
+                description: item.description,
+                unlockCoin: Number(item.unlock_coin) || 0,
+                rentalCoin: Number(item.rental_coin) || 0,
+                examCount: 1,
+                active: item.active || 1,
+              }));
+              set({ subjects: mappedSubjects, lastFetchedSubjects: Date.now() });
+            }
+          } catch (e) {
+            console.error("Silent refresh failed", e);
+          }
           return;
         }
 
@@ -211,9 +237,45 @@ export const useExamStore = create<ExamState>()(
         }
         return undefined;
       },
+
+      subscribeToSubjects: () => {
+        const channel = supabase
+          .channel('subjects-realtime')
+          .on(
+            'postgres_changes',
+            { event: 'UPDATE', schema: 'public', table: 'subjects' },
+            (payload) => {
+              const updatedSubject = payload.new as { 
+                id: string; 
+                unlock_coin: number; 
+                rental_coin: number; 
+                active: number 
+              };
+              
+              set((state) => ({
+                subjects: state.subjects.map((s) =>
+                  s.id === updatedSubject.id
+                    ? {
+                        ...s,
+                        unlockCoin: Number(updatedSubject.unlock_coin) || 0,
+                        rentalCoin: Number(updatedSubject.rental_coin) || 0,
+                        active: updatedSubject.active,
+                      }
+                    : s
+                ),
+              }));
+            }
+          )
+          .subscribe();
+
+        return () => {
+          supabase.removeChannel(channel);
+        };
+      },
     }),
     {
       name: 'dhtn-exam-storage',
+      version: 2, // Tăng version để xóa cache cũ (tránh lỗi cache không có rental_coin)
       partialize: (state) => ({
         unlockedSubjectIds: state.unlockedSubjectIds,
         unlockedDataUrls: state.unlockedDataUrls,
