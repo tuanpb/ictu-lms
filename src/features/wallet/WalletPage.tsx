@@ -147,7 +147,7 @@ const WalletPage = () => {
                 <Flex justify="space-between" align="center">
                   <Text type="secondary">Tên đại lý thụ hưởng</Text>
                   <Flex align="center" gap={8}>
-                    <Text strong>Phan Bình Tuấn</Text>
+                    <Text strong>NGUYEN THI MINH HANG</Text>
                     <Button type="text" size="small" icon={<Copy size={12} />} onClick={() => copyToClipboard('Phan Bình Tuấn', 'tên thụ hưởng')} />
                   </Flex>
                 </Flex>
@@ -155,14 +155,14 @@ const WalletPage = () => {
                 <Flex justify="space-between" align="center">
                   <Text type="secondary">Số tài khoản</Text>
                   <Flex align="center" gap={8}>
-                    <Text strong style={{ fontSize: 16, color: 'var(--color-primary)' }}>105882450457</Text>
+                    <Text strong style={{ fontSize: 16, color: 'var(--color-primary)' }}>0974106084</Text>
                     <Button type="text" size="small" icon={<Copy size={12} />} onClick={() => copyToClipboard('105882450457', 'số tài khoản')} />
                   </Flex>
                 </Flex>
                 <Divider style={{ margin: 0 }} />
                 <Flex justify="space-between" align="center">
                   <Text type="secondary">Ngân hàng</Text>
-                  <Tag color="blue" style={{ fontWeight: 600 }}>VietinBank</Tag>
+                  <Tag color="green" style={{ fontWeight: 600 }}>VPBank</Tag>
                 </Flex>
                 <Divider style={{ margin: 0 }} />
                 <Flex justify="space-between" align="center">

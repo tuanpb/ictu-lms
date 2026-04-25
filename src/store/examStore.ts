@@ -36,7 +36,8 @@ export const useExamStore = create<ExamState>()(
       unlockedDataUrls: {},
 
       initializeData: async () => {
-        await get().fetchSubjects();
+        // Luôn làm mới danh sách môn học khi khởi tạo App (hoặc F5)
+        await get().fetchSubjects(true);
         await get().fetchUnlockedSubjects();
         set({ initialized: true });
       },
@@ -179,18 +180,19 @@ export const useExamStore = create<ExamState>()(
         try {
           const { data, error } = await supabase
             .from('subjects')
-            .select('id, name, description, unlock_coin, active')
+            .select('id, name, description, unlock_coin, rental_coin, active')
             .eq('active', 1)
             .order('name', { ascending: true });
 
           if (error) throw error;
 
           if (data) {
-            const mappedSubjects: Subject[] = data.map((item: { id: string; name: string; description?: string; unlock_coin: string | number; active?: number }) => ({
+            const mappedSubjects: Subject[] = data.map((item: { id: string; name: string; description?: string; unlock_coin: string | number; rental_coin?: string | number; active?: number }) => ({
               id: item.id,
               name: item.name,
               description: item.description,
               unlockCoin: Number(item.unlock_coin) || 0,
+              rentalCoin: Number(item.rental_coin) || 0,
               examCount: 1,
               active: item.active || 1,
             }));

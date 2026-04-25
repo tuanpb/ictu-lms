@@ -83,7 +83,14 @@ const SubjectListPage = () => {
     }
   };
 
-  const isInsufficientBalance = (currentUser?.coin ?? 0) < (selectedSubject?.unlockCoin ?? 0);
+  const activePrice = useMemo(() => {
+    if (!selectedSubject) return 0;
+    return (selectedSubject.rentalCoin && selectedSubject.rentalCoin > 0)
+      ? selectedSubject.rentalCoin
+      : selectedSubject.unlockCoin;
+  }, [selectedSubject]);
+
+  const isInsufficientBalance = (currentUser?.coin ?? 0) < activePrice;
 
   const transferContent = useMemo(() => {
     if (!currentUser?.email) return 'LMS';
@@ -97,7 +104,7 @@ const SubjectListPage = () => {
     const accountNo = '0974106084';
     const template = 'compact2';
     const accountName = 'NGUYEN THI MINH HANG';
-    const amount = selectedSubject.unlockCoin - (currentUser?.coin ?? 0);
+    const amount = activePrice - (currentUser?.coin ?? 0);
 
     return `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?amount=${amount * 1000}&addInfo=${encodeURIComponent(transferContent)}&accountName=${encodeURIComponent(accountName)}`;
   }, [selectedSubject, transferContent]);
@@ -117,7 +124,7 @@ const SubjectListPage = () => {
 
     setIsUnlocking(true);
     try {
-      const result = await unlockSubject(selectedSubject.id, selectedSubject.unlockCoin || 0);
+      const result = await unlockSubject(selectedSubject.id, activePrice);
       if (result.success) {
         message.success(`Đã mở khóa thành công môn ${selectedSubject.name}`);
         await refreshBalance();
@@ -177,10 +184,10 @@ const SubjectListPage = () => {
                   style={{
                     background: 'var(--bg-card)',
                     backdropFilter: 'blur(16px)',
-                    border: isUnlocked ? '1px solid #10b98140' : '1px solid var(--border-subtle)',
+                    border: isUnlocked ? '1px solid #10b98140' : (subject.rentalCoin && subject.rentalCoin > 0 ? '1px solid #f59e0b' : '1px solid var(--border-subtle)'),
                     borderRadius: 16,
                     overflow: 'hidden',
-                    animation: `fadeInUp 0.4s ease-out ${index * 0.05}s both`,
+                    animation: isUnlocked ? `fadeInUp 0.4s ease-out ${index * 0.05}s both` : (subject.rentalCoin && subject.rentalCoin > 0 ? `glow-pulse 3s infinite ease-in-out, fadeInUp 0.4s ease-out ${index * 0.05}s both` : `fadeInUp 0.4s ease-out ${index * 0.05}s both`),
                     height: '100%',
                   }}
                   styles={{
@@ -216,14 +223,38 @@ const SubjectListPage = () => {
                         )}
                       </div>
                       {!isUnlocked && (
-                        <Badge
-                          count={`${subject.unlockCoin} Coin`}
-                          style={{
-                            backgroundColor: '#f59e0b',
-                            borderColor: '#f59e0b',
-                            boxShadow: '0 2px 4px rgba(245,158,11,0.2)'
-                          }}
-                        />
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                          {subject.rentalCoin && subject.rentalCoin > 0 ? (
+                            <>
+                              <Text delete type="secondary" style={{ fontSize: 12, color: 'rgba(0,0,0,0.25)' }}>
+                                {subject.unlockCoin}
+                              </Text>
+                              <Badge
+                                count={`${subject.rentalCoin} Xu`}
+                                style={{
+                                  backgroundColor: '#ef4444',
+                                  borderColor: '#ef4444',
+                                  boxShadow: '0 4px 12px rgba(239,68,68,0.3)',
+                                  animation: 'text-shimmer 1.5s infinite ease-in-out'
+                                }}
+                              />
+                              <Badge
+                                status="processing"
+                                color="#ef4444"
+                                style={{ animation: 'promo-bounce 2s infinite ease-in-out', marginLeft: -4 }}
+                              />
+                            </>
+                          ) : (
+                            <Badge
+                              count={`${subject.unlockCoin} Xu`}
+                              style={{
+                                backgroundColor: '#f59e0b',
+                                borderColor: '#f59e0b',
+                                boxShadow: '0 2px 4px rgba(245,158,11,0.2)'
+                              }}
+                            />
+                          )}
+                        </div>
                       )}
                     </Flex>
                   </Flex>
@@ -231,10 +262,6 @@ const SubjectListPage = () => {
                   <Title level={5} style={{ margin: '0 0 8px', color: 'var(--text-primary)' }}>
                     {subject.name}
                   </Title>
-
-                  <Text type="secondary" style={{ fontSize: 13, display: 'block', minHeight: 40, margin: 0 }}>
-                    {subject.description || 'Chưa có mô tả cho môn học này.'}
-                  </Text>
                 </Card>
               </Col>
             );
@@ -273,7 +300,7 @@ const SubjectListPage = () => {
                 color: '#be123c',
                 fontSize: 14
               }}>
-                Số dư hiện tại của bạn không đủ để mở khóa môn học này. Vui lòng nạp thêm <b>{((selectedSubject?.unlockCoin ?? 0) - (currentUser?.coin ?? 0)).toLocaleString()} Xu</b>.
+                Số dư hiện tại của bạn không đủ để mở khóa môn học này. Vui lòng nạp thêm <b>{(activePrice - (currentUser?.coin ?? 0)).toLocaleString()} Xu</b>.
               </div>
 
               <div style={{ textAlign: 'center' }}>
@@ -314,7 +341,12 @@ const SubjectListPage = () => {
                 color: '#92400e'
               }}>
                 <Text style={{ color: '#92400e' }}>
-                  Phí mở khóa: <b>{selectedSubject?.unlockCoin} Xu</b>
+                  Phí mở khóa: <b>{activePrice} Xu</b>
+                  {selectedSubject?.rentalCoin && selectedSubject.rentalCoin > 0 && (
+                    <Text delete type="secondary" style={{ fontSize: 12, marginLeft: 8, color: '#92400e80' }}>
+                      {selectedSubject.unlockCoin} Xu
+                    </Text>
+                  )}
                 </Text>
                 <br />
                 <Text style={{ fontSize: 12 }}>

@@ -394,7 +394,7 @@ const AnswerKeyPage = () => {
               onClick={handleExportPDF}
               style={{ fontWeight: 500 }}
             >
-              Xuất PDF
+              In
             </Button>
             <Checkbox
               checked={showOnlyCorrect}

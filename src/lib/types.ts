@@ -20,6 +20,7 @@ export interface Subject {
   description?: string;
   dataUrl?: string;
   unlockCoin: number;
+  rentalCoin?: number;
   examCount?: number;
   active?: number;
 }
